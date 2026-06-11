@@ -9,6 +9,7 @@ import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { ThemeProvider } from "@/components/theme-provider";
 import { CompareDrawer } from "@/components/shop/CompareDrawer";
 import { AIAssistant } from "@/components/shop/AIAssistant";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -163,6 +164,7 @@ export default function RootLayout({
           <ScrollToTop />
           <AIAssistant />
           <Toaster position="top-center" richColors />
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>
