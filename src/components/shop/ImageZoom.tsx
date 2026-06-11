@@ -1,9 +1,10 @@
 'use client';
 
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { FALLBACK_SVG } from '@/components/ui/image-with-fallback';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -24,6 +25,13 @@ export function ImageZoom({ src, alt, className }: ImageZoomProps) {
   const isMobile = useIsMobile();
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
+
+  // Image state with fallback
+  const [imgSrc, setImgSrc] = useState(src || FALLBACK_SVG);
+
+  useEffect(() => {
+    setImgSrc(src || FALLBACK_SVG);
+  }, [src]);
 
   // Desktop state
   const [isHovering, setIsHovering] = useState(false);
@@ -174,7 +182,7 @@ export function ImageZoom({ src, alt, className }: ImageZoomProps) {
       {/* Main Image */}
       <Image
         ref={imageRef}
-        src={src}
+        src={imgSrc}
         alt={alt}
         fill
         sizes="(max-width: 1024px) 100vw, 50vw"
@@ -187,6 +195,7 @@ export function ImageZoom({ src, alt, className }: ImageZoomProps) {
             : undefined
         }
         draggable={false}
+        onError={() => setImgSrc(FALLBACK_SVG)}
       />
 
       {/* Desktop: Zoom Lens */}
@@ -209,7 +218,7 @@ export function ImageZoom({ src, alt, className }: ImageZoomProps) {
           <div
             className="absolute top-0 right-0 w-1/2 h-full bg-white dark:bg-zinc-900 border-l border-border/50 shadow-2xl z-20 pointer-events-none overflow-hidden"
             style={{
-              backgroundImage: `url(${src})`,
+              backgroundImage: `url("${imgSrc}")`,
               backgroundRepeat: 'no-repeat',
               backgroundSize: `${ZOOM_FACTOR * 100}%`,
               backgroundPosition: `${backgroundPosition.x}% ${backgroundPosition.y}%`,
