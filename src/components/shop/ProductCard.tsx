@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, ShoppingCart, Sparkles, TrendingUp, Check, Eye, Scale, Flame, Timer, Award, Percent } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -164,8 +164,8 @@ export function ProductCard({ product, className, showQuickView = true }: Produc
         {/* Image Section */}
         <div className="relative aspect-square overflow-hidden bg-muted">
           {primaryImage ? (
-            <Image
-              src={primaryImage}
+            <ImageWithFallback
+              src={primaryImage ?? ''}
               alt={product.name}
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
