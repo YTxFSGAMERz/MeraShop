@@ -16,7 +16,7 @@ import { toast } from 'sonner';
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, isAuthenticated, updateUser } = useAuthStore();
+  const { user, isAuthenticated, updateUser, _hasHydrated } = useAuthStore();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -31,6 +31,7 @@ export default function ProfilePage() {
   const [changingPassword, setChangingPassword] = useState(false);
 
   useEffect(() => {
+    if (!_hasHydrated) return;
     if (!isAuthenticated) {
       router.push('/account/login');
       return;
@@ -40,9 +41,18 @@ export default function ProfilePage() {
       setEmail(user.email);
       setPhone(user.phone || '');
     }
-  }, [isAuthenticated, user, router]);
+  }, [_hasHydrated, isAuthenticated, user, router]);
 
-  if (!isAuthenticated || !user) return null;
+  if (!_hasHydrated || !isAuthenticated || !user) {
+    return (
+      <div className="flex h-[60vh] items-center justify-center">
+        <div className="flex flex-col items-center gap-2">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+          <p className="text-sm text-muted-foreground">Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
 
   const initials = user.name
     ? user.name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
