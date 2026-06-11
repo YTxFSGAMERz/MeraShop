@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ShoppingCart,
@@ -235,12 +235,13 @@ function QuickViewContent({
       <div className="space-y-3">
         <div className="relative aspect-square rounded-xl overflow-hidden bg-muted shadow-sm">
           {primaryImage ? (
-            <Image
+            <ImageWithFallback
               src={primaryImage}
-              alt={basicProduct.name}
+              alt={product.name}
               fill
-              sizes="(max-width: 768px) 90vw, 400px"
-              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 400px"
+              className="object-contain p-4"
+              priority
             />
           ) : (
             <div className="flex h-full items-center justify-center">
@@ -272,12 +273,12 @@ function QuickViewContent({
         {additionalImages.length > 0 && (
           <div className="flex gap-2">
             <div className="relative size-14 rounded-lg overflow-hidden border-2 border-primary ring-1 ring-primary/30 shrink-0">
-              <Image
+              <ImageWithFallback
                 src={primaryImage!}
-                alt={basicProduct.name}
+                alt={product.name}
                 fill
-                sizes="56px"
                 className="object-cover"
+                sizes="56px"
               />
             </div>
             {additionalImages.map((img) => (
@@ -285,12 +286,12 @@ function QuickViewContent({
                 key={img.id}
                 className="relative size-14 rounded-lg overflow-hidden border border-border shrink-0"
               >
-                <Image
+                <ImageWithFallback
                   src={img.url}
-                  alt={img.altText || basicProduct.name}
+                  alt={img.altText || product.name}
                   fill
-                  sizes="56px"
                   className="object-cover"
+                  sizes="56px"
                 />
               </div>
             ))}
