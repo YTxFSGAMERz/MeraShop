@@ -23,6 +23,9 @@ export async function POST(request: NextRequest) {
       shippingCost,
       discountAmount,
       totalAmount,
+      razorpayOrderId,
+      razorpayPaymentId,
+      razorpaySignature,
     } = body;
 
     // ── Validate required fields ───────────────────────────────────────
@@ -191,8 +194,11 @@ export async function POST(request: NextRequest) {
         orderId: order.id,
         amount: order.totalAmount,
         currency: 'INR',
-        status: paymentMethod === 'cod' ? 'pending' : 'pending',
+        status: paymentMethod === 'cod' ? 'pending' : 'completed',
         method: paymentMethod,
+        razorpayOrderId: razorpayOrderId || null,
+        razorpayPaymentId: razorpayPaymentId || null,
+        razorpaySignature: razorpaySignature || null,
       },
     });
 
