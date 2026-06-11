@@ -24,6 +24,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { Separator } from '@/components/ui/separator';
+import { useAuthStore } from '@/lib/stores/auth-store';
 
 // ── Types ───────────────────────────────────────────────────────────────────
 type NotificationType = 'order' | 'delivery' | 'promo' | 'price_drop' | 'review' | 'back_in_stock' | 'recommendation';
@@ -271,8 +272,12 @@ function EmptyNotifications() {
   );
 }
 
+// ── User Specific Types ─────────────────────────────────────────────────────
+const USER_SPECIFIC_TYPES: NotificationType[] = ['order', 'delivery', 'review', 'recommendation'];
+
 // ── NotificationCenter Component ────────────────────────────────────────────
 export function NotificationCenter() {
+  const { isAuthenticated, _hasHydrated: authHydrated } = useAuthStore();
   const [notifications, setNotifications] = useState<Notification[]>(INITIAL_NOTIFICATIONS);
   const [hasHydrated, setHasHydrated] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -294,7 +299,15 @@ export function NotificationCenter() {
     }
   }, [notifications, hasHydrated]);
 
-  const unreadCount = notifications.filter((n) => !n.read).length;
+  // Filter notifications based on authentication state
+  const visibleNotifications = notifications.filter((n) => {
+    if (USER_SPECIFIC_TYPES.includes(n.type)) {
+      return authHydrated && isAuthenticated;
+    }
+    return true;
+  });
+
+  const unreadCount = visibleNotifications.filter((n) => !n.read).length;
 
   const markAsRead = useCallback((id: string) => {
     setNotifications((prev) =>
@@ -313,19 +326,6 @@ export function NotificationCenter() {
     toast.success('All notifications marked as read');
   }, []);
 
-  // Show toast for new notifications (simulated on first open)
-  useEffect(() => {
-    if (isOpen && unreadCount > 0) {
-      const firstUnread = notifications.find((n) => !n.read);
-      if (firstUnread) {
-        toast.info(firstUnread.title, {
-          description: firstUnread.description.substring(0, 80) + '...',
-          duration: 3000,
-        });
-      }
-    }
-  }, [isOpen, notifications, unreadCount]);
-
   // Group notifications by type for filtering
   const notificationTypes: { key: NotificationType | 'all'; label: string }[] = [
     { key: 'all', label: 'All' },
@@ -340,8 +340,8 @@ export function NotificationCenter() {
   const [activeFilter, setActiveFilter] = useState<NotificationType | 'all'>('all');
 
   const filteredNotifications = activeFilter === 'all'
-    ? notifications
-    : notifications.filter((n) => n.type === activeFilter);
+    ? visibleNotifications
+    : visibleNotifications.filter((n) => n.type === activeFilter);
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -397,8 +397,8 @@ export function NotificationCenter() {
           <div className="flex gap-1 overflow-x-auto scrollbar-hide">
             {notificationTypes.map((type) => {
               const count = type.key === 'all'
-                ? notifications.length
-                : notifications.filter((n) => n.type === type.key).length;
+                ? visibleNotifications.length
+                : visibleNotifications.filter((n) => n.type === type.key).length;
               if (count === 0 && type.key !== 'all') return null;
               return (
                 <button
@@ -469,7 +469,7 @@ export function NotificationCenter() {
         </div>
 
         {/* Footer */}
-        {notifications.length > 0 && (
+        {visibleNotifications.length > 0 && (
           <>
             <Separator />
             <div className="p-2">
