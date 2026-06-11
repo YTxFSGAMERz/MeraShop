@@ -13,9 +13,9 @@ export async function GET(request: NextRequest) {
     const where: Record<string, unknown> = { deletedAt: null };
     if (search) {
       where.OR = [
-        { name: { contains: search } },
-        { email: { contains: search } },
-        { phone: { contains: search } },
+        { name: { contains: search, mode: 'insensitive' } },
+        { email: { contains: search, mode: 'insensitive' } },
+        { phone: { contains: search, mode: 'insensitive' } },
       ];
     }
     if (role) where.role = role;
