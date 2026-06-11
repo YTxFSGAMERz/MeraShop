@@ -101,7 +101,7 @@ const itemVariants = {
 
 export default function AccountPage() {
   const router = useRouter();
-  const { user, isAuthenticated, clearUser } = useAuthStore();
+  const { user, isAuthenticated, clearUser, _hasHydrated } = useAuthStore();
   const wishlistItems = useWishlistStore((s) => s.items);
   const cartItems = useCartStore((s) => s.items);
   const addToCart = useCartStore((s) => s.addItem);
@@ -111,6 +111,7 @@ export default function AccountPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!_hasHydrated) return;
     if (!isAuthenticated) {
       router.push('/account/login');
       return;
@@ -141,7 +142,7 @@ export default function AccountPage() {
     };
 
     fetchDashboard();
-  }, [isAuthenticated, user?.id, router]);
+  }, [_hasHydrated, isAuthenticated, user?.id, router]);
 
   const handleLogout = () => {
     clearUser();
@@ -156,8 +157,15 @@ export default function AccountPage() {
     returned: recentOrders.filter((o) => ['returned', 'cancelled'].includes(o.status)).length,
   };
 
-  if (!isAuthenticated || !user) {
-    return null;
+  if (!_hasHydrated || !isAuthenticated || !user) {
+    return (
+      <div className="flex h-[60vh] items-center justify-center">
+        <div className="flex flex-col items-center gap-2">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+          <p className="text-sm text-muted-foreground">Loading account...</p>
+        </div>
+      </div>
+    );
   }
 
   const initials = user.name
