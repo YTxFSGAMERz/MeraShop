@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
     // Try to save the AI answer to the database
     try {
       const existing = await db.productQuestion.findFirst({
-        where: { productId, question: { contains: question.substring(0, 50) } },
+        where: { productId, question: { contains: question.substring(0, 50), mode: 'insensitive' } },
         orderBy: { createdAt: 'desc' },
       });
 
