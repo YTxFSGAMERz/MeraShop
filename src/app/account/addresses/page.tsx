@@ -78,7 +78,7 @@ const emptyForm = {
 
 export default function AddressesPage() {
   const router = useRouter();
-  const { user, isAuthenticated } = useAuthStore();
+  const { user, isAuthenticated, _hasHydrated } = useAuthStore();
 
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState(true);
@@ -90,6 +90,7 @@ export default function AddressesPage() {
   const [form, setForm] = useState(emptyForm);
 
   useEffect(() => {
+    if (!_hasHydrated) return;
     if (!isAuthenticated) {
       router.push('/account/login');
       return;
@@ -109,9 +110,18 @@ export default function AddressesPage() {
     };
 
     fetchAddresses();
-  }, [isAuthenticated, user?.id, router]);
+  }, [_hasHydrated, isAuthenticated, user?.id, router]);
 
-  if (!isAuthenticated || !user) return null;
+  if (!_hasHydrated || !isAuthenticated || !user) {
+    return (
+      <div className="flex h-[60vh] items-center justify-center">
+        <div className="flex flex-col items-center gap-2">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+          <p className="text-sm text-muted-foreground">Loading addresses...</p>
+        </div>
+      </div>
+    );
+  }
 
   const openAddDialog = () => {
     setEditingAddress(null);
