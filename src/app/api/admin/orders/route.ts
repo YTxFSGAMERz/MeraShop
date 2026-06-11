@@ -14,8 +14,8 @@ export async function GET(request: NextRequest) {
     if (status) where.status = status;
     if (search) {
       where.OR = [
-        { orderNumber: { contains: search } },
-        { shippingName: { contains: search } },
+        { orderNumber: { contains: search, mode: 'insensitive' } },
+        { shippingName: { contains: search, mode: 'insensitive' } },
       ];
     }
 
