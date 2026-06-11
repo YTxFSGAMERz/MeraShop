@@ -32,11 +32,11 @@ export async function GET(request: NextRequest) {
           isActive: true,
           deletedAt: null,
           OR: [
-            { name: { contains: q } },
-            { shortDescription: { contains: q } },
-            { tags: { contains: q } },
-            { brand: { name: { contains: q } } },
-            { category: { name: { contains: q } } },
+            { name: { contains: q, mode: 'insensitive' } },
+            { shortDescription: { contains: q, mode: 'insensitive' } },
+            { tags: { contains: q, mode: 'insensitive' } },
+            { brand: { name: { contains: q, mode: 'insensitive' } } },
+            { category: { name: { contains: q, mode: 'insensitive' } } },
           ],
         },
         take: 20,
@@ -94,8 +94,8 @@ export async function GET(request: NextRequest) {
         where: {
           isActive: true,
           OR: [
-            { name: { contains: q } },
-            { description: { contains: q } },
+            { name: { contains: q, mode: 'insensitive' } },
+            { description: { contains: q, mode: 'insensitive' } },
           ],
         },
         take: 10,
