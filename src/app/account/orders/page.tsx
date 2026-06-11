@@ -130,7 +130,7 @@ function StatusTimeline({ status }: { status: string }) {
 
 export default function OrdersPage() {
   const router = useRouter();
-  const { user, isAuthenticated } = useAuthStore();
+  const { user, isAuthenticated, _hasHydrated } = useAuthStore();
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -138,6 +138,7 @@ export default function OrdersPage() {
   const [sheetOpen, setSheetOpen] = useState(false);
 
   useEffect(() => {
+    if (!_hasHydrated) return;
     if (!isAuthenticated) {
       router.push('/account/login');
       return;
@@ -157,9 +158,18 @@ export default function OrdersPage() {
     };
 
     fetchOrders();
-  }, [isAuthenticated, user?.id, router]);
+  }, [_hasHydrated, isAuthenticated, user?.id, router]);
 
-  if (!isAuthenticated || !user) return null;
+  if (!_hasHydrated || !isAuthenticated || !user) {
+    return (
+      <div className="flex h-[60vh] items-center justify-center">
+        <div className="flex flex-col items-center gap-2">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+          <p className="text-sm text-muted-foreground">Loading orders...</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleViewDetails = (order: Order) => {
     setSelectedOrder(order);
