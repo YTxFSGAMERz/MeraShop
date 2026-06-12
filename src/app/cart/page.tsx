@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import { useRouter } from 'next/navigation';
 import {
   ShoppingCart,
@@ -403,7 +403,7 @@ export default function CartPage() {
                     >
                       <div className="relative aspect-square rounded-md overflow-hidden bg-muted mb-2">
                         {product.primaryImage ? (
-                          <Image
+                          <ImageWithFallback
                             src={product.primaryImage}
                             alt={product.name}
                             fill
@@ -559,7 +559,7 @@ export default function CartPage() {
                             {/* Product info */}
                             <div className="flex gap-4">
                               <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-muted">
-                                <Image
+                                <ImageWithFallback
                                   src={item.image}
                                   alt={item.name}
                                   fill
