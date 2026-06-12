@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import { useRouter } from 'next/navigation';
 import {
   MapPin,
@@ -533,7 +533,7 @@ export default function CheckoutPage() {
                 className="flex items-center gap-3"
               >
                 <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg bg-muted">
-                  <Image
+                  <ImageWithFallback
                     src={item.image}
                     alt={item.name}
                     fill
@@ -1498,7 +1498,7 @@ export default function CheckoutPage() {
                 className="flex gap-3"
               >
                 <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg bg-muted">
-                  <Image
+                  <ImageWithFallback
                     src={item.image}
                     alt={item.name}
                     fill
