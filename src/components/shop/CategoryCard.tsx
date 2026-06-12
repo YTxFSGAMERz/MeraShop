@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import { ArrowRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { CATEGORY_COLORS } from '@/lib/constants';
@@ -44,7 +44,7 @@ export function CategoryCard({ category, className }: CategoryCardProps) {
         )}
       >
         {category.image && (
-          <Image
+          <ImageWithFallback
             src={category.image}
             alt={category.name}
             fill
