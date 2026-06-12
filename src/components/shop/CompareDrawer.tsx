@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ArrowRight, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -72,7 +72,7 @@ export function CompareDrawer() {
                   >
                     <div className="relative size-10 rounded-md overflow-hidden bg-muted shrink-0">
                       {product.primaryImage ? (
-                        <Image
+                        <ImageWithFallback
                           src={product.primaryImage}
                           alt={product.name}
                           fill
