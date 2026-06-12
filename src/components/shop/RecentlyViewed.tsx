@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import { Clock, Package } from 'lucide-react';
 
 import { formatINR, calcDiscountPercent } from '@/lib/constants';
@@ -46,7 +46,7 @@ export function RecentlyViewed({ currentProductId }: RecentlyViewedProps) {
               {/* Product Image */}
               <div className="relative aspect-square rounded-lg overflow-hidden bg-muted border border-border/50">
                 {product.image ? (
-                  <Image
+                  <ImageWithFallback
                     src={product.image}
                     alt={product.name}
                     fill
