@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
+import { ImageWithFallback } from '@/components/ui/image-with-fallback';
 import Autoplay from 'embla-carousel-autoplay';
 import { motion } from 'framer-motion';
 import { ShoppingBag, ChevronLeft, ChevronRight, Sparkles, Zap, Percent, Clock, Star } from 'lucide-react';
@@ -370,7 +370,7 @@ export function HeroBanner() {
                         <div className="absolute inset-0 z-20 pointer-events-none" style={{ boxShadow: 'inset 0 0 30px rgba(255, 255, 255, 0.1)' }} />
 
                         {slide.isImageUrl && slide.image ? (
-                          <Image
+                          <ImageWithFallback
                             src={slide.image}
                             alt={slide.headline}
                             fill
